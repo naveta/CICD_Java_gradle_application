@@ -1,4 +1,4 @@
-# test
+# This is kube.yml
 ---
 apiVersion: v1
 kind: Service
