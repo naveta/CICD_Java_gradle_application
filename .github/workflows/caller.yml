@@ -3,6 +3,8 @@ name: Caller
 # Controls when the workflow will run
 on:
   workflow_dispatch:
+env:
+  DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }} 
 jobs:
   call-workflow-passing-data:
     uses: devops-max/CICD_Java_gradle_application/.github/workflows/reusable.yml@main
