@@ -25,10 +25,10 @@ jobs:
       
     - name: deploying manifest file on k8s cluster 
       run: | 
-        sed -i "s;imagename;34.125.31.157:8083/javaapp:${{ github.run_number }};g" kube.yaml
+        sed -i "s;imagename;localhost:5000/javaapp:${{ github.run_number }};g" kube.yaml
         sudo kubectl apply -f kube.yaml
         sleep 30
-        kubectl get po 
+        sudo kubectl get pods 
         
     - name: verification 
       run: |
