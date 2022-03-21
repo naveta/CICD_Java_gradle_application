@@ -8,3 +8,27 @@ jobs:
     uses: devops-max/CICD_Java_gradle_application/.github/workflows/reusable.yml@main
     with:
       run: self-hosted
+  image-build:
+    needs: call-workflow-passing-data
+    runs-on: self-hosted
+    steps:        
+    - name: Run Datree's policy check
+      run: datree test kube.yaml
+              
+    - name: docker build & docker push
+      run: |
+        docker build -t localhost:5000/javaapp:${{ github.run_number }} .
+        docker push localhost:5000/javaapp:${{ github.run_number }}
+        docker rmi localhost:5000/javaapp:${{ github.run_number }}
+      
+    - name: deploying manifest file on k8s cluster 
+      run: | 
+        sed -i "s;imagename;34.125.31.157:8083/javaapp:${{ github.run_number }};g" kube.yaml
+        sudo kubectl apply -f kube.yaml
+        sleep 30
+        kubectl get po 
+        
+    - name: verification 
+      run: |
+        sleep 60
+        sudo kubectl run curl --image=curlimages/curl -i --rm --restart=Never -- curl myapp:8080
