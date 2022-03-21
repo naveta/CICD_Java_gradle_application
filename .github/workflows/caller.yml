@@ -6,6 +6,6 @@ on:
 
 jobs:
   call-workflow-passing-data:
-    uses: devops-max/simple-java-maven-app/.github/workflows/reusable.yml@main
+    uses: devops-max/CICD_Java_gradle_application/.github/workflows/reusable.yml@main
     with:
       runs-on: self-hosted
