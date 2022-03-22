@@ -1,36 +1,11 @@
+
 name: Caller
 
 # Controls when the workflow will run
 on:
   workflow_dispatch:
-env:
-  DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }} 
 jobs:
   call-workflow-passing-data:
-    uses: devops-max/CICD_Java_gradle_application/.github/workflows/reusable.yml@main
+    uses: naveta/CICD_Java_gradle_application/.github/workflows/reusable.yml@main
     with:
-      run: self-hosted
-  image-build:
-    needs: call-workflow-passing-data
-    runs-on: self-hosted
-    steps:        
-    - name: Run Datree's policy check
-      run: datree test kube.yaml
-              
-    - name: docker build & docker push
-      run: |
-        sudo docker build -t localhost:5000/javaapp:${{ github.run_number }} .
-        sudo docker push localhost:5000/javaapp:${{ github.run_number }}
-#        sudo docker rmi localhost:5000/javaapp:${{ github.run_number }}
-      
-    - name: deploying manifest file on k8s cluster 
-      run: | 
-        sed -i "s;imagename;localhost:5000/javaapp:${{ github.run_number }};g" kube.yaml
-        sudo kubectl apply -f kube.yaml
-        sleep 30
-        sudo kubectl get pods 
-        
-    - name: verification 
-      run: |
-        sleep 60
-        sudo kubectl run curl --image=curlimages/curl -i --rm --restart=Never -- curl myapp:8080
+      run: ubuntu-latest
